@@ -17,7 +17,7 @@ def get_ICM():
 
 #Canonical URM 
 def get_URM(normalized=False):
-    df_URM = pd.read_csv(filepath_or_buffer=os.path.join(files_directory,'train_sessions.csv'), sep=',', header=0, dtype={'session_id': int, 'item_id': int})7
+    df_URM = pd.read_csv(filepath_or_buffer=os.path.join(files_directory,'train_sessions.csv'), sep=',', header=0, dtype={'session_id': int, 'item_id': int})
     df_URM["count"]=1
     df_URM=df_URM.grouby(["session_id","item_id"])["count"].sum().reset_index()
     #TODO add something to divide train and test sessions
