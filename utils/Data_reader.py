@@ -34,6 +34,7 @@ def get_URM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/d
     return URM_matrix_session_item_count
 
 
+# TODO: Fix this, not working properly
 # Additional possible URM
 def get_URM_session_feature(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/dataset/processed_data", normalized=False):
     df_URM = pd.read_csv(filepath_or_buffer=os.path.join(files_directory, 'simplified_features.csv'), sep=',', header=0,
