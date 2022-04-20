@@ -5,7 +5,7 @@ import os
 
 
 # Currently URM doesn't contain bought item
-def get_ICM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped"):
+def get_ICM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/dataset/processed_data"):
     df_icm = pd.read_csv(filepath_or_buffer=os.path.join(files_directory, 'simplified_features.csv'), sep=',', header=0,
                          dtype={'item_id': int, 'feature_idx': int})
 
@@ -17,8 +17,8 @@ def get_ICM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped")
 
 
 # Canonical URM
-def get_URM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped", normalized=False):
-    df_URM = pd.read_csv(filepath_or_buffer=os.path.join(files_directory, 'train_sessions.csv'), sep=',', header=0,
+def get_URM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/dataset/processed_data", normalized=False):
+    df_URM = pd.read_csv(filepath_or_buffer=os.path.join(files_directory, 'train_sessions_mapped.csv'), sep=',', header=0,
                          dtype={'session_id': int, 'item_id': int})
     df_URM["count"] = 1
     df_URM = df_URM.grouby(["session_id", "item_id"])["count"].sum().reset_index()
@@ -35,7 +35,7 @@ def get_URM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped",
 
 
 # Additional possible URM
-def get_URM_session_feature(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped", normalized=False):
+def get_URM_session_feature(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/dataset/processed_data", normalized=False):
     df_URM = pd.read_csv(filepath_or_buffer=os.path.join(files_directory, 'simplified_features.csv'), sep=',', header=0,
                          dtype={'session_id': int, 'feature_idx': int, 'count': int})
     # TODO add something to divide train and test sessions
