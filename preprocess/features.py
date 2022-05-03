@@ -1,3 +1,4 @@
+import datetime
 from time import time_ns
 from math import sin, cos
 import numpy as np
@@ -20,7 +21,8 @@ def macro_features_generation(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     print('completed date features')
     input_dataframe = get_session_length_features(input_dataframe)
     print('completed session length')
-    # input_dataframe = get_special_date_features(input_dataframe)
+    input_dataframe = get_special_date_features(input_dataframe)
+    print('completed special features')
     return input_dataframe
 
 
@@ -140,20 +142,32 @@ def compute_lengths(x):
         user_went_afk
     )
 
+
 # TODO: Implement the special time features
-# def get_special_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
-#     session_length_feature_names = ['is_weekend',
-#                                     'is_hot_hour',
-#                                     'is_christmas_time',
-#                                     'is_black_friday',
-#                                     'is_night',
-#                                     'n_seen_items',
-#                                     'user_went_afk']
-#
-#     # compute length of sessions in seconds
-#     input_dataframe[session_length_feature_names] = input_dataframe[['date', 'item_id']].apply(
-#         compute_lengths,
-#         axis=1,
-#         result_type="expand"
-#     )
-#     return input_dataframe
+def get_special_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
+    special_date_feature_names = ['is_weekend',
+                                    'is_hot_hour',
+                                    'is_night',
+                                    # 'is_christmas_time',
+                                    # 'is_black_friday',
+                                    ]
+
+    # compute length of sessions in seconds
+    input_dataframe[special_date_feature_names] = input_dataframe[['date']].apply(
+        compute_special_dates,
+        axis=1,
+        result_type="expand"
+    )
+    return input_dataframe
+
+
+def compute_special_dates(x):
+    session_started_on_weekend = x['date'][0].day_of_week == 5 or x['date'][0].day_of_week == 6
+    session_started_on_hot_hour = datetime.time(hour=21) > x['date'][0].time() > datetime.time(hour=18)
+    session_started_at_night = datetime.time(hour=23) < x['date'][0].time() < datetime.time(hour=5)
+
+    return(
+        session_started_on_weekend,
+        session_started_on_hot_hour,
+        session_started_at_night
+    )

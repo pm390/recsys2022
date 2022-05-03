@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from features import get_session_length_features, remove_reloaded_items, macro_features_generation
+from features import get_session_length_features, remove_reloaded_items, macro_features_generation, get_special_date_features
 import os
 
 base_path = '../dataset'
@@ -16,4 +16,5 @@ train_sessions = pd.read_csv(
 train_sessions = train_sessions.sort_values(by='date').groupby(['session_id']).agg(tuple).applymap(list).reset_index()
 train_sessions.sort_values(by="session_id", inplace=True)
 result = macro_features_generation(train_sessions)
+# result = get_special_date_features(train_sessions)
 print(result)
