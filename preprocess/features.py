@@ -146,11 +146,11 @@ def compute_lengths(x):
 # TODO: Implement the special time features
 def get_special_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     special_date_feature_names = ['is_weekend',
-                                    'is_hot_hour',
-                                    'is_night',
-                                    # 'is_christmas_time',
-                                    # 'is_black_friday',
-                                    ]
+                                  'is_hot_hour',
+                                  'is_night',
+                                  'is_christmas_time',
+                                  'is_black_friday',
+                                  ]
 
     # compute length of sessions in seconds
     input_dataframe[special_date_feature_names] = input_dataframe[['date']].apply(
@@ -165,9 +165,12 @@ def compute_special_dates(x):
     session_started_on_weekend = x['date'][0].day_of_week == 5 or x['date'][0].day_of_week == 6
     session_started_on_hot_hour = datetime.time(hour=21) > x['date'][0].time() > datetime.time(hour=18)
     session_started_at_night = datetime.time(hour=23) < x['date'][0].time() < datetime.time(hour=5)
-
-    return(
+    session_started_on_december = x['date'][0].month == 12
+    session_started_on_black_friday_week = (x['date'][0].month == 1) and (23 <= x['date'][0].day <= 29)
+    return (
         session_started_on_weekend,
         session_started_on_hot_hour,
-        session_started_at_night
+        session_started_at_night,
+        session_started_on_december,
+        session_started_on_black_friday_week
     )
