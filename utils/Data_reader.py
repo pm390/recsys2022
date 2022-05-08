@@ -36,7 +36,10 @@ def get_URM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/d
 
 # TODO: Fix this, not working properly
 # Additional possible URM
-def get_URM_session_feature(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/dataset/processed_data", normalized=False):
+def get_URM_session_feature(
+        files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/dataset/processed_data",
+        normalized=False
+):
     df_URM = pd.read_csv(filepath_or_buffer=os.path.join(files_directory, 'simplified_features.csv'), sep=',', header=0,
                          dtype={'session_id': int, 'feature_idx': int, 'count': int})
     # TODO add something to divide train and test sessions
