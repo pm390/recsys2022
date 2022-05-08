@@ -1,9 +1,9 @@
 import datetime
-from time import time_ns
+from itertools import compress
 from math import sin, cos
+
 import numpy as np
 import pandas as pd
-from itertools import compress
 
 
 # Idee features:

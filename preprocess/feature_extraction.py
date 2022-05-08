@@ -1,7 +1,8 @@
-import pandas as pd
-import numpy as np
-from features import get_session_length_features, remove_reloaded_items, macro_features_generation, get_special_date_features
 import os
+
+import pandas as pd
+
+from features import macro_features_generation
 
 base_path = '../dataset'
 
