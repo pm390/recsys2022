@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from features import macro_features_generation
+from preprocess.features import macro_features_generation
 
 base_path = '../dataset'
 
