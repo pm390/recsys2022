@@ -168,9 +168,9 @@ def compute_special_dates(x):
     session_started_on_december = x['date'][0].month == 12
     session_started_on_black_friday_week = (x['date'][0].month == 11) and (27 <= x['date'][0].day <= 30)
     return (
-        session_started_on_weekend,
-        session_started_on_hot_hour,
-        session_started_at_night,
-        session_started_on_december,
-        session_started_on_black_friday_week
+        int(session_started_on_weekend),
+        int(session_started_on_hot_hour),
+        int(session_started_at_night),
+        int(session_started_on_december),
+        int(session_started_on_black_friday_week)
     )
