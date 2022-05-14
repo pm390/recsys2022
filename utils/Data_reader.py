@@ -21,7 +21,9 @@ def get_URM(files_directory="/content/drive/MyDrive/dressipi_recsys2022_mapped/d
     df_URM = pd.read_csv(filepath_or_buffer=os.path.join(files_directory, 'train_sessions_mapped.csv'), sep=',', header=0,
                          dtype={'session_id': int, 'item_id': int})
     df_URM["count"] = 1
-    df_URM = df_URM.grouby(["session_id", "item_id"])["count"].sum().reset_index()
+    df_URM['session_id'] = df_URM['session_id'].astype('category')
+    df_URM['session_id'] = df_URM['session_id'].cat.codes
+    df_URM = df_URM.groupby(["session_id", "item_id"])["count"].sum().reset_index()
     # TODO add something to divide train and test sessions
     session_id_list = df_URM['session_id'].values
     item_id_list = df_URM['item_id'].values
