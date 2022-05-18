@@ -164,7 +164,8 @@ def get_special_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
 def compute_special_dates(x):
     session_started_on_weekend = x['date'][0].day_of_week == 5 or x['date'][0].day_of_week == 6
     session_started_on_hot_hour = datetime.time(hour=21) > x['date'][0].time() > datetime.time(hour=18)
-    session_started_at_night = datetime.time(hour=23) < x['date'][0].time() < datetime.time(hour=5)
+    # TODO: is_night sembra buggato, mettere una and qua
+    session_started_at_night = datetime.time(hour=23) < x['date'][0].time() or x['date'][0].time() < datetime.time(hour=5)
     session_started_on_december = x['date'][0].month == 12
     session_started_on_black_friday_week = (x['date'][0].month == 11) and (27 <= x['date'][0].day <= 30)
     return (
