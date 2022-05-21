@@ -62,6 +62,10 @@ def get_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
         'date_year_2020'
     ]
 
+    # TODO: fixare qua
+    input_dataframe["date_0"] = input_dataframe['date'].str[0]
+    input_dataframe["date_hour_sin"] = input_dataframe["date_0"].hour * np.pi / 30
+
     input_dataframe[date_feature_names] = input_dataframe[['date']].apply(
         process_timestamps,
         axis=1,
@@ -81,6 +85,7 @@ def process_timestamps(x):
     return (
         timedelta,
         times,
+        # TODO: queste dopo le sposto sopra e le vettorizzo easy
         sin(x[0].hour * np.pi / 30),
         cos(x[0].hour * np.pi / 30),
         sin(x[0].day * np.pi / 15),
