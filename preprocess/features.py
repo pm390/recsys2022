@@ -53,18 +53,24 @@ def get_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     date_feature_names = [
         'timedelta',
         'date_normalized',
-        'date_hour_sin',
-        'date_hour_cos',
-        'date_day_sin',
-        'date_day_cos',
-        'date_month_sin',
-        'date_month_cos',
-        'date_year_2020'
+        # 'date_hour_sin',
+        # 'date_hour_cos',
+        # 'date_day_sin',
+        # 'date_day_cos',
+        # 'date_month_sin',
+        # 'date_month_cos',
+        # 'date_year_2020'
     ]
 
-    # TODO: fixare qua
-    input_dataframe["date_0"] = input_dataframe['date'].str[0]
-    input_dataframe["date_hour_sin"] = input_dataframe["date_0"].hour * np.pi / 30
+    input_dataframe["date_0"] = pd.to_datetime(input_dataframe['date'].str[0])
+    input_dataframe["date_hour_sin"] = np.sin(input_dataframe["date_0"].dt.hour * np.pi / 30)
+    input_dataframe["date_hour_cos"] = np.cos(input_dataframe["date_0"].dt.hour * np.pi / 30)
+    input_dataframe["date_day_sin"] = np.sin(input_dataframe["date_0"].dt.hour * np.pi / 15)
+    input_dataframe["date_day_cos"] = np.cos(input_dataframe["date_0"].dt.hour * np.pi / 15)
+    input_dataframe["date_month_sin"] = np.sin(input_dataframe["date_0"].dt.hour * np.pi / 6)
+    input_dataframe["date_month_cos"] = np.cos(input_dataframe["date_0"].dt.hour * np.pi / 6)
+    input_dataframe["date_year_2020"] = input_dataframe["date_0"].dt.year == 2020
+
 
     input_dataframe[date_feature_names] = input_dataframe[['date']].apply(
         process_timestamps,
@@ -86,13 +92,13 @@ def process_timestamps(x):
         timedelta,
         times,
         # TODO: queste dopo le sposto sopra e le vettorizzo easy
-        sin(x[0].hour * np.pi / 30),
-        cos(x[0].hour * np.pi / 30),
-        sin(x[0].day * np.pi / 15),
-        cos(x[0].day * np.pi / 15),
-        sin(x[0].month * np.pi / 6),
-        cos(x[0].month * np.pi / 6),
-        int(x[0].year == 2020)
+        # sin(x[0].hour * np.pi / 30),
+        # cos(x[0].hour * np.pi / 30),
+        # sin(x[0].day * np.pi / 15),
+        # cos(x[0].day * np.pi / 15),
+        # sin(x[0].month * np.pi / 6),
+        # cos(x[0].month * np.pi / 6),
+        # int(x[0].year == 2020)
     )
 
 
@@ -158,6 +164,8 @@ def get_special_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
                                   ]
 
     # compute length of sessions in seconds
+
+
     input_dataframe[special_date_feature_names] = input_dataframe[['date']].apply(
         compute_special_dates,
         axis=1,
@@ -165,11 +173,10 @@ def get_special_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     )
     return input_dataframe
 
-
+# TODO: this can be optimized too in the same way as the sin/cos functions
 def compute_special_dates(x):
     session_started_on_weekend = x['date'][0].day_of_week == 5 or x['date'][0].day_of_week == 6
     session_started_on_hot_hour = datetime.time(hour=21) > x['date'][0].time() > datetime.time(hour=18)
-    # TODO: is_night sembra buggato, mettere una and qua
     session_started_at_night = datetime.time(hour=23) < x['date'][0].time() or x['date'][0].time() < datetime.time(hour=5)
     session_started_on_december = x['date'][0].month == 12
     session_started_on_black_friday_week = (x['date'][0].month == 11) and (27 <= x['date'][0].day <= 30)

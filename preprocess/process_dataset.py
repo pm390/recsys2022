@@ -51,7 +51,7 @@ class Preprocessor:
 
     def pre_process_dataset(self):
         train_session = self._get_train_session()
-        # train_session = self._get_extra_features(train_session)  # dataframe di train completo con tutte le colonne
+        train_session = self._get_extra_features(train_session)  # dataframe di train completo con tutte le colonne
         y_item_id = self._get_target_data()  # returna gli item_id target delle singole sessioni
         y_features = self._get_features_target(y_item_id)
 
@@ -62,11 +62,9 @@ class Preprocessor:
                                                                                                      y_item_id,
                                                                                                      y_features)
         x_train['item_id'] = self._pad_sequences(x_train['item_id']).tolist()
-        x_train[item_related_features[0]] = self._pad_sequences(x_train[item_related_features[0]]).tolist()
+        x_train[item_related_features[0]] = self._pad_item_features(x_train[item_related_features[0]]).tolist()
 
 
-        # TODO: fallo anche per gli altri cazzo di padding
-        # TODO:
         print('bllallbllabl')
 
     def _get_train_session(self):
@@ -89,7 +87,7 @@ class Preprocessor:
         y = train_purchases['item_id'].to_numpy()
         return y
 
-    # Returna un numpy array questa roba, quindi solo il numpy array associato al padding delle sequenze item_id
+    # TODO: Queste due funzioni di padding mi sembrano uguali, cazzo di senso ha duplicarle? Raggrupparle magari
     @staticmethod
     def _pad_sequences(sequences):
         padded_sequences = tf.keras.preprocessing.sequence.pad_sequences(
