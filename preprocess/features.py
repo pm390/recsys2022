@@ -141,9 +141,19 @@ def compute_lengths(x):
 # TODO: Implement the special time features
 def get_special_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     input_dataframe["date_0"] = pd.to_datetime(input_dataframe['date'].str[0])
-    input_dataframe["is_weekend"] = (input_dataframe["date_0"].dt.day_of_week == 5) | (input_dataframe["date_0"].dt.day_of_week == 6)
-    input_dataframe["is_hot_hour"] = (datetime.time(hour=21) > input_dataframe["date_0"].dt.time) & (input_dataframe["date_0"].dt.time > datetime.time(hour=18))
-    input_dataframe["is_night"] = (datetime.time(hour=23) < input_dataframe["date_0"].dt.time) | (input_dataframe["date_0"].dt.time < datetime.time(hour=5))
+
+    input_dataframe["is_weekend"] = (input_dataframe["date_0"].dt.day_of_week == 5) | (
+                input_dataframe["date_0"].dt.day_of_week == 6)
+
+    input_dataframe["is_hot_hour"] = (datetime.time(hour=21) > input_dataframe["date_0"].dt.time) & (
+                input_dataframe["date_0"].dt.time > datetime.time(hour=18))
+
+    input_dataframe["is_night"] = (datetime.time(hour=23) < input_dataframe["date_0"].dt.time) | (
+                input_dataframe["date_0"].dt.time < datetime.time(hour=5))
+
     input_dataframe["is_christmas_time"] = input_dataframe["date_0"].dt.month == 12
-    input_dataframe["is_black_friday"] = (input_dataframe["date_0"].dt.month == 11) & (27 <= input_dataframe["date_0"].dt.day) & (input_dataframe["date_0"].dt.day <= 30)
+
+    input_dataframe["is_black_friday"] = (input_dataframe["date_0"].dt.month == 11) & (
+                27 <= input_dataframe["date_0"].dt.day) & (input_dataframe["date_0"].dt.day <= 30)
+
     return input_dataframe
