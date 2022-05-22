@@ -55,15 +55,11 @@ class Preprocessor:
         y_item_id = self._get_target_data()  # returna gli item_id target delle singole sessioni
         y_features = self._get_features_target(y_item_id)
 
-        # x_ids = self._pad_sequences(train_session)
-        # x_item_related = self._pad_item_features(train_session)
-
         x_train, x_test, y_train, y_test, y_features_train, y_features_test = self._train_test_split(train_session,
                                                                                                      y_item_id,
                                                                                                      y_features)
         x_train['item_id'] = self._pad_sequences(x_train['item_id']).tolist()
         x_train[item_related_features[0]] = self._pad_item_features(x_train[item_related_features[0]]).tolist()
-
 
         print('bllallbllabl')
 
@@ -73,7 +69,6 @@ class Preprocessor:
                                      infer_datetime_format=True
                                      )
         train_sessions = train_sessions.sort_values(by='date').groupby(['session_id']).agg(list).reset_index()
-
         train_sessions.sort_values(by="session_id", inplace=True)
         return train_sessions
 
