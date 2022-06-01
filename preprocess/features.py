@@ -16,6 +16,10 @@ import pandas as pd
 
 def macro_features_generation(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     input_dataframe = remove_reloaded_items(input_dataframe)
+
+    input_dataframe = input_dataframe.sort_values(by='date').groupby(['session_id']).agg(list).reset_index()
+    input_dataframe.sort_values(by="session_id", inplace=True)
+
     print('completed removal')
     input_dataframe = get_date_features(input_dataframe)
     print('completed date features')
@@ -28,13 +32,20 @@ def macro_features_generation(input_dataframe: pd.DataFrame) -> pd.DataFrame:
 
 # Remove sequent items if the same item has a delta t of 30 seconds
 def remove_reloaded_items(input_dataframe: pd.DataFrame) -> pd.DataFrame:
-    input_dataframe[['date', 'item_id']] = input_dataframe[['date', 'item_id']].apply(
-        remove_items,
-        axis=1,
-        result_type="expand"
-    )
-    return input_dataframe
+    shifted_item_ids_per_group = input_dataframe.sort_values(['session_id', 'date']).groupby(['session_id'])['item_id'].shift(-1).fillna(0).astype(int)
+    shifted_datetime_per_group = input_dataframe.sort_values(['session_id', 'date']).groupby(['session_id'])['date'].shift(-1)#.fillna(0)
+    consecutive_item_filter = (input_dataframe.sort_values(['session_id', 'date'])['item_id'] - shifted_item_ids_per_group).eq(0)
+    time_delta_filter = (shifted_datetime_per_group - input_dataframe.sort_values(['session_id', 'date'])['date']).dt.total_seconds() < 30
+    duplication_filter = ~(consecutive_item_filter & time_delta_filter)
 
+    filtered_dataframe = input_dataframe[duplication_filter]
+    return filtered_dataframe
+    # input_dataframe[['date', 'item_id']] = input_dataframe[['date', 'item_id']].apply(
+    #     remove_items,
+    #     axis=1,
+    #     result_type="expand"
+    # )
+    # return input_dataframe
 
 def remove_items(x):
     boolean_vector = [
@@ -62,7 +73,7 @@ def get_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     input_dataframe["date_day_cos"] = np.cos(input_dataframe["date_0"].dt.hour * np.pi / 15)
     input_dataframe["date_month_sin"] = np.sin(input_dataframe["date_0"].dt.hour * np.pi / 6)
     input_dataframe["date_month_cos"] = np.cos(input_dataframe["date_0"].dt.hour * np.pi / 6)
-    input_dataframe["date_year_2020"] = input_dataframe["date_0"].dt.year == 2020
+    input_dataframe["date_year_2020"] = (input_dataframe["date_0"].dt.year == 2020).astype(int)
 
     input_dataframe[date_feature_names] = input_dataframe[['date']].apply(
         process_timestamps,
@@ -116,7 +127,7 @@ def compute_lengths(x):
 
     variance_time_spent_on_item_seconds = np.var(time_deltas_between_items)
 
-    user_went_afk = any(time_deltas_between_items / 60 > 30)
+    user_went_afk = int(any(time_deltas_between_items / 60 > 30))
 
     if n_seen_items > 1:
         longest_seen_item = x['item_id'][
@@ -142,18 +153,18 @@ def compute_lengths(x):
 def get_special_date_features(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     input_dataframe["date_0"] = pd.to_datetime(input_dataframe['date'].str[0])
 
-    input_dataframe["is_weekend"] = (input_dataframe["date_0"].dt.day_of_week == 5) | (
-                input_dataframe["date_0"].dt.day_of_week == 6)
+    input_dataframe["is_weekend"] = ((input_dataframe["date_0"].dt.day_of_week == 5) | (
+                input_dataframe["date_0"].dt.day_of_week == 6)).astype(int)
 
-    input_dataframe["is_hot_hour"] = (datetime.time(hour=21) > input_dataframe["date_0"].dt.time) & (
-                input_dataframe["date_0"].dt.time > datetime.time(hour=18))
+    input_dataframe["is_hot_hour"] = ((datetime.time(hour=21) > input_dataframe["date_0"].dt.time) & (
+                input_dataframe["date_0"].dt.time > datetime.time(hour=18))).astype(int)
 
-    input_dataframe["is_night"] = (datetime.time(hour=23) < input_dataframe["date_0"].dt.time) | (
-                input_dataframe["date_0"].dt.time < datetime.time(hour=5))
+    input_dataframe["is_night"] = ((datetime.time(hour=23) < input_dataframe["date_0"].dt.time) | (
+                input_dataframe["date_0"].dt.time < datetime.time(hour=5))).astype(int)
 
-    input_dataframe["is_christmas_time"] = input_dataframe["date_0"].dt.month == 12
+    input_dataframe["is_christmas_time"] = (input_dataframe["date_0"].dt.month == 12).astype(int)
 
-    input_dataframe["is_black_friday"] = (input_dataframe["date_0"].dt.month == 11) & (
-                27 <= input_dataframe["date_0"].dt.day) & (input_dataframe["date_0"].dt.day <= 30)
+    input_dataframe["is_black_friday"] = ((input_dataframe["date_0"].dt.month == 11) & (
+                27 <= input_dataframe["date_0"].dt.day) & (input_dataframe["date_0"].dt.day <= 30)).astype(int)
 
     return input_dataframe
