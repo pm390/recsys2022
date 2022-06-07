@@ -1,6 +1,6 @@
-from preprocess.process_dataset import Preprocessor, PreprocessorSimple, PreprocessorTime
+from preprocess.process_dataset import Preprocessor, PreprocessorSimple, PreprocessorTime, PreprocessorComplete
 
-preprocessor = PreprocessorTime()
+preprocessor = PreprocessorComplete()
 processed_dataset = preprocessor.pre_process_dataset()
 
 

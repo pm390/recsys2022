@@ -101,8 +101,8 @@ class Preprocessor:
             padding='post'
         )
 
-        if len(item_related_features) == 1:
-            padded_sequences = np.expand_dims(padded_sequences, axis=-1)
+        # if len(item_related_features) == 1:
+        #     padded_sequences = np.expand_dims(padded_sequences, axis=-1)
 
         return padded_sequences
 
@@ -137,25 +137,30 @@ class PreprocessorSimple(Preprocessor):
 class PreprocessorTime(Preprocessor):
 
     def _get_dataset_type(self, x_train, x_test, y_train, y_test, y_features_train, y_features_test):
-        train_set_time = tf.data.Dataset.from_tensor_slices(((np.array(x_train['item_id'].to_list()),
+        train_set = tf.data.Dataset.from_tensor_slices(((np.array(x_train['item_id'].to_list()),
                                                               x_train[self.static_features].to_numpy()),
                                                              (y_train, y_features_train))).batch(512,
                                                                                                  num_parallel_calls=tf.data.AUTOTUNE).prefetch(
             tf.data.AUTOTUNE)
 
-        test_set_time = tf.data.Dataset.from_tensor_slices(((np.array(x_test['item_id'].to_list()),
+        test_set = tf.data.Dataset.from_tensor_slices(((np.array(x_test['item_id'].to_list()),
                                                              x_test[self.static_features].to_numpy()),
                                                             (y_test, y_features_test))).batch(512)
 
-        return train_set_time, test_set_time
+        return train_set, test_set
 
 
 class PreprocessorComplete(Preprocessor):
     def _get_dataset_type(self, x_train, x_test, y_train, y_test, y_features_train, y_features_test):
-        train_set_complete = tf.data.Dataset.from_tensor_slices(
-            ((np.array(x_train['item_id'].to_list()), np.array(x_train[item_related_features].to_list()), x_train[self.static_features].to_numpy()), (y_train, y_features_train))
+
+        train_set = tf.data.Dataset.from_tensor_slices(
+            ((np.array(x_train['item_id'].to_list()), np.array(x_train[item_related_features].to_numpy().tolist()), x_train[self.static_features].to_numpy()), (y_train, y_features_train))
         ).batch(512, num_parallel_calls=tf.data.AUTOTUNE).prefetch(tf.data.AUTOTUNE).shuffle(1563,
                                                                                              reshuffle_each_iteration=True)
-        test_set_complete = tf.data.Dataset.from_tensor_slices(
-            ((np.array(x_test['item_id'].to_list()), np.array(x_test[item_related_features].to_list()), x_test[self.static_features].to_numpy()), (y_test, y_features_test))
+        test_set = tf.data.Dataset.from_tensor_slices(
+            ((np.array(x_test['item_id'].to_list()), np.array(x_test[item_related_features].to_numpy().tolist()), x_test[self.static_features].to_numpy()), (y_test, y_features_test))
         ).batch(512)
+
+        return train_set, test_set
+
+
