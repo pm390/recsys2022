@@ -51,9 +51,10 @@ class Preprocessor:
 
     def pre_process_dataset(self):
         train_session = self._get_train_session()
-        train_session = self._get_extra_features(train_session)  # dataframe di train completo con tutte le colonne
         y_item_id = self._get_target_data()  # returna gli item_id target delle singole sessioni
         y_features = self._get_features_target(y_item_id)
+        train_session = self._get_extra_features(train_session, y_features)  # dataframe di train completo con tutte le colonne
+
 
         x_train, x_test, y_train, y_test, y_features_train, y_features_test = self._train_test_split(train_session,
                                                                                                      y_item_id,
@@ -74,8 +75,8 @@ class Preprocessor:
         return train_sessions
 
     @staticmethod
-    def _get_extra_features(train_session):
-        return macro_features_generation(train_session)
+    def _get_extra_features(train_session, embeddings):
+        return macro_features_generation(train_session, embeddings)
 
     def _get_target_data(self):
         train_purchases = pd.read_csv(self.train_purchases_mapped_path, usecols=['session_id', 'item_id'])
