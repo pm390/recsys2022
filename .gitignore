@@ -129,4 +129,10 @@ dmypy.json
 .pyre/
 
 #ignore dataset
-dataset/
+dataset/original_data/*.csv
+dataset/processed_data/*.csv
+dataset/processed_data/*.npy
+dataset/processed_data/*.npz
+pipeline_models_for_ensemble/RecSys_Course_AT_PoliMi/
+dataset/**/*.csv
+rankers/*.txt
