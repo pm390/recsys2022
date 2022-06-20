@@ -1,6 +1,11 @@
 The code considers a python installation of python 3.7.11 and various packages with versions suggested in requirement files.
+
 To run the code inside the repository we provide a requirements file.
-To run neural networks the use of tensorflow-gpu=2.8.2 instead of tensorflow=2.8.2 is suggested. The requirement files uses a more general cpu installation but the neural networks training would require too much time on cpu, so a change to a gpu or the use of freely available notebook environmnets with gpus is suggested for the NN notebooks.
+
+To run neural networks the use of tensorflow-gpu=2.8.2 instead of tensorflow=2.8.2 is suggested.
+
+The requirement files uses a more general cpu installation but the neural networks training would require too much time on cpu, so a change to a gpu or the use of freely available notebook environmnets with gpus is suggested for the NN notebooks.
+
 We can first create an environment with conda:
 ```
     conda create --name "submission_environment" python=3.7.11
@@ -14,7 +19,9 @@ We then use "requirements_pip.txt" to install the required packages using pip
     pip install -r requirements.txt
 ```
 The code is organized in various notebooks.
+
 The code is organized mainly in 3 parts.
+
 Inside each part we numbered the notebooks to make it easier to replicate our results
 
 # Placing the dataset
