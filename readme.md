@@ -1,10 +1,12 @@
 To run the code inside the repository we provide two possible requirements files.
 One "requirements_conda.txt" that can be used to download the required packages using conda
+'''
     conda create --name "submission_environment" --file requirements_conda.txt
-
+'''
 The othe choice is "requirements_pip.txt" that can be used to install the required packages using pip
+'''
     pip install -r requirements_pip.txt
-
+'''
 The code is organized in various notebooks.
 The code is organized mainly in 3 parts.
 Inside each part we numbered the notebooks to make it easier to replicate our results
