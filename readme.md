@@ -14,7 +14,7 @@ We activate the created environment:
 ```
     conda activate submission_environment
 ```
-We then use "requirements_pip.txt" to install the required packages using pip
+We then use "requirements.txt" to install the required packages using pip
 ```
     pip install -r requirements.txt
 ```
