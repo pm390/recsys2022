@@ -41,9 +41,9 @@ In this notebook we generate modified versions of the originally provided datase
 
 This notebook generates the ICM ( Item Content Matrix) in a scipy sparse format. 
 The general idea is to map each couple of (category_id,feature_id) into a new id and after performing this mapping we also consider category_id alone as a feature. This last choice is to laverage the information provided in the dataset explanation ( third dot of Content data ).
-"""
-Some items may not share any feature_category_ids if they are different types of items, for example trousers will share very few category ids with shirts and will share even less category ids with sandals.
-"""
+
+>Some items may not share any feature_category_ids if they are different types of items, for example trousers will share very few category ids with shirts and will share even less category ids with sandals.
+
 This explains that even if the value of a category is different for two items if they share the same category id they can be partially similar.
 
 ## Auto_ecnoder_features
