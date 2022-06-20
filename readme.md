@@ -46,7 +46,7 @@ The general idea is to map each couple of (category_id,feature_id) into a new id
 
 This explains that even if the value of a category is different for two items if they share the same category id they can be partially similar.
 
-## Auto_ecnoder_features
+## Auto_encoder_features
 
 This notebook uses tries to learn an autoencoder over the ICM to reduce the dimensionality of the features.
 This is done to allow feeding the features information to different kind of neural networks as pretrained weights of embedding layers.
@@ -69,14 +69,14 @@ In these notebooks we generate candidate item for both the validation and test s
 
 This notebook performs training of different kind of traditional recommenders:
 
-1) User Collaborative Filtering Recommenders: To avoid temporal leakage we consider for each validation user the Top K closes users among the train sessions. So we don't consider similarities between validation and validation sessions.
+1) User Collaborative Filtering Recommenders: To avoid temporal leakage we consider for each validation session the Top K closest sessions among the train sessions. So we don't consider similarities between validation instances and other validation sessions.
 
-2) Item Collaborative Filtering Recommenders: We compute similarities between items starting from the URM that considers only the train sessions leaving out the validation sessions. After computing the simlarities between the items the similarity matrix is used to predict the expected score of the various item for the validation sessions.
+2) Item Collaborative Filtering Recommenders: We compute similarities between items starting from the URM that considers only the train sessions leaving out the validation sessions. After computing the similarities between the items, the similarity matrix is used to predict the expected score of the various item for the validation sessions.
 
-3) Item Content Based Filtering Recommenders: We compute  similarities between items starting from the ICM
-After computing the simlarities between the items the similarity matrix is used to predict the expected score of the various item for the validation sessions.
+3) Item Content Based Filtering Recommenders: We compute  similarities between items starting from the ICM.
+After computing the similarities between the items, the similarity matrix is used to predict the expected score of the various item for the validation sessions.
 
-4) Graph Based Recommedners: We compute similarities similarities between items starting from the URM that considers only the train sessions leaving out the validation sessions. After computing the simlarities between the items the similarity matrix is used to predict the expected score of the various item for the validation sessions.
+4) Graph Based Recommenders: We compute similarities between items starting from the URM that considers only the train sessions leaving out the validation sessions. After computing the similarities between the items, the similarity matrix is used to predict the expected score of the various item for the validation sessions.
 
 For the first 3 classes of Recommenders we train 8 different models using different distance metrics:
 cosine, pearson, jaccard, tanimoto, asymmetric cosine, adjusted cosine, dice and tversky. 
@@ -94,20 +94,20 @@ The only change is that we compute 150 candidates for each recommender instead o
 ## Transformer (a-b)
 
 These notebooks contains the code to train a transformer based NN.
-In the (a) notebook we train the network in a supervised fashion over all the train sessions except the last one, for which we compute the top 100 condidates.
-In the (b) notebook we train the network in a supervised fashion over all the train sessions and comèute the top 100 candidates for the test sessions.
+In the (a) notebook we train the network in a supervised fashion over all the train sessions except the last month, for which we compute the top 100 condidates.
+In the (b) notebook we train the network in a supervised fashion over all the train sessions and compute the top 100 candidates for the test sessions.
 
 ## LSTM (a-b)
 
 These notebooks contains the code to train a Bidirectional LSTM based NN.
-In the (a) notebook we train the network in a supervised fashion over all the train sessions except the last one, for which we compute the top 100 condidates.
-In the (b) notebook we train the network in a supervised fashion over all the train sessions and comèute the top 100 candidates for the test sessions.
+In the (a) notebook we train the network in a supervised fashion over all the train sessions except the last month, for which we compute the top 100 condidates.
+In the (b) notebook we train the network in a supervised fashion over all the train sessions and compute the top 100 candidates for the test sessions.
 
 ## GRU (a-b)
 
 These notebooks contains the code to train a GRU based NN.
-In the (a) notebook we train the network in a supervised fashion over all the train sessions except the last one, for which we compute the top 100 condidates.
-In the (b) notebook we train the network in a supervised fashion over all the train sessions and comèute the top 100 candidates for the test sessions.
+In the (a) notebook we train the network in a supervised fashion over all the train sessions except the last month, for which we compute the top 100 condidates.
+In the (b) notebook we train the network in a supervised fashion over all the train sessions and compute the top 100 candidates for the test sessions.
 
 # Final submission
 
@@ -116,7 +116,7 @@ In the ./Final_submission folder there are the notebooks used to train a set of 
 ## dressipi-lgbmranker-training_k
 
 In this notebook we perform the training of 10 LGBM Rankers.
-We first merge the suggestions of the various recommenders, we compute a dataset composed of ( sessions, candidates, session_features and scores given by the various recommenders to the specific couple of session and candidate ).
+We first merge the suggestions of the various recommenders, we compute a dataset composed of ```(session, candidate, session_features and scores given by the various recommenders to the specific couple of session and candidate)```.
 We extract only the session for which there is the correct item among the list of candidates and drop all other sessions, we kept around 76.5% of sesssions.
 We then get the list of sessions and perform k-fold(k=10) on this list.
 We get 10 sets of train and validation sessions and we train 10 LGBM rankers over these sets.
