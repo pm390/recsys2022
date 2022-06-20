@@ -1,7 +1,9 @@
+The code considers a python installation of python 3.7.11 and various packages with versions suggested in requirement files.
 To run the code inside the repository we provide two possible requirements files.
+To run neural networks the use of tensorflow-gpu=2.8.2 instead of tensorflow=2.8.2 is suggested. The requirement files uses a more general cpu installation but the neural networks training would require too much time on cpu, so a change to a gpu or the use of freely available notebook environmnets with gpus is suggested for the NN notebooks.
 One "requirements_conda.txt" that can be used to download the required packages using conda
 ```
-    conda create --name "submission_environment" --file requirements_conda.txt
+    conda create --name "submission_environment" --file requirements_conda.txt python=3.7.11
 ```
 The othe choice is "requirements_pip.txt" that can be used to install the required packages using pip
 ```
